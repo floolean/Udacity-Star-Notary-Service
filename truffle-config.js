@@ -28,7 +28,11 @@
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
-module.exports = {
+const MNEMONIC = process.env['MNEMONIC'];
+const INFURAKEY = process.env['INFURAKEY'];
+const HDWalletProvider = require("truffle-hdwallet-provider");
+
+let configs = {
   /**
    * Networks define how you connect to your ethereum client and let you set the
    * defaults web3 uses to send transactions. If you don't specify one truffle
@@ -48,10 +52,9 @@ module.exports = {
     //
     development: {
       host: "127.0.0.1",     // Localhost (default: none)
-      port: 9545,            // Standard Ethereum port (default: none)
+      port: 7545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
     },
-
     // Another network with more advanced options...
     // advanced: {
       // port: 8777,             // Custom port
@@ -100,4 +103,16 @@ module.exports = {
       // }
     }
   }
+};
+
+if (MNEMONIC) {
+	configs.networks['rinkeby'] =
+	{
+		provider: function() { 
+			return new HDWalletProvider(MNEMONIC, INFURAKEY);
+		 },
+		 network_id: 4
+	};
 }
+
+module.exports = configs;
